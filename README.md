@@ -1,17 +1,23 @@
-Lotus Chess Engine by Arnout Oosterbosch
+# Lotus Chess Engine
 
+## Table of contents
+* [Description](#Description)
+* [How to use](#How to use)
+* [v1](#Lotus Chess Engine v1 (16th of december 2023))
+
+## Description
 This is a protoversion of my attempt at a chess AI.
 This is also my first big soloproject.
 The end goal for this project is to create a Chess Engine that has no problem beating me (1750 rapid on chess.com)
 
-How to use:
+## How to use
     1. run the draw.py file
     2. select 'PLAY A FRIEND' or 'PLAY THE LOTUS CHESS ENGINE'
     3. if the latter has been chosen, select 'PLAY AS WHITE' or 'PLAY AS BLACK'
     4. click on the piece you want to move.
     5. click on the square you want to piece to go (has to be a legal move)
 
-Lotus Chess Engine v1 (16th of december 2023):
+## Lotus Chess Engine v1 (16th of december 2023)
     Basic functionality:
         Menu
         PvP and PvE modes, can play as both white and black
