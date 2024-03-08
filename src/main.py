@@ -30,19 +30,15 @@ def main():
         for event in p.event.get():
             if event.type == p.QUIT:
                 running = False
-
-        new_states = []    
-        start_time = t.time()  
-        if current_gs.white_to_move:
-            new_states = all_white_moves(current_gs)
-        else:
-            new_states = all_black_moves(current_gs)
-
+   
+        start_time = t.time()       
+        possible_game_states = generate_all_moves(current_gs, current_gs.is_white_to_move)
         
-        possible_game_states = new_states
+        end_time = t.time()
+        elapsed_time = end_time - start_time
 
         if versus_engine:
-            if (player_is_white and current_gs.white_to_move) or (not player_is_white and not current_gs.white_to_move):
+            if (player_is_white and current_gs.is_white_to_move) or (not player_is_white and not current_gs.is_white_to_move):
 
                 current_gs = player_moves(current_gs, possible_game_states)
             else:
@@ -54,9 +50,6 @@ def main():
             current_gs = player_moves(current_gs, possible_game_states)
 
         update_board(screen, clock, current_gs)
-
-        end_time = t.time()
-        elapsed_time = end_time - start_time
 
         print(len(possible_game_states), 'possible move(s)')
         print('Execution time:', elapsed_time, 'seconds')

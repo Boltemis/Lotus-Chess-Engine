@@ -8,7 +8,7 @@ DIMENSION = 8
 SQ_SIZE = HEIGHT // DIMENSION
 
 def player_moves(gs, possible_game_states) -> Gamestate: 
-    if gs.white_to_move:
+    if gs.is_white_to_move():
         print("White to move")
     else:
         print("Black to move")
@@ -30,28 +30,18 @@ def player_moves(gs, possible_game_states) -> Gamestate:
     end_col = pos[0] // SQ_SIZE
     end_row = pos[1] // SQ_SIZE
 
-    new_gs = copy.deepcopy(gs)
+    new_move = [ele[:] for ele in gs.board]
 
-    if (piece == 'K' and end_col == col + 2 and end_row == row) or (piece == 'k' and end_col == col + 2 and end_row == row):
-        new_gs.board[row][col] = '-'
-        new_gs.board[end_row][end_col] = piece
-        new_gs.board[row][col+3] = '-'
-        new_gs.board[end_row][end_col-1] = 'R'
+    new_move[row][col] = '-'
+    new_move[end_row][end_col] = piece
 
-    else:
-        new_gs.board[row][col] = '-'
-        new_gs.board[end_row][end_col] = piece
-
-        if (piece == 'P' and end_row == row - 2):
-            new_gs.ep_flag_array[0][col] = True
-        elif (piece == 'p' and end_row == row + 2):
-            new_gs.ep_flag_array[1][col] = True
-
+    new_gs = gs.copy(new_move)
     possible_game_boards = []
     for ele in possible_game_states:
-        possible_game_boards.append(ele.board)
+        possible_game_boards.append(ele.board) 
+
+    
     if new_gs.board in possible_game_boards:
-        new_gs.white_to_move = not new_gs.white_to_move
         return new_gs
     else:
         return player_moves(gs, possible_game_states)

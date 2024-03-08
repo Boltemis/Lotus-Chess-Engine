@@ -9,7 +9,7 @@ def minimax(board, depth, alpha, beta, player) -> tuple[int, Gamestate]:
         return evaluate(board)
     if player == 'White':
         max_eval = -999999
-        arr = all_white_moves(board)
+        arr = generate_all_moves(board, board.player_is_white)
         best_move = None
         for e in arr:
             eval_score, _ = minimax(e, depth-1, alpha, beta, "Black")
@@ -22,7 +22,7 @@ def minimax(board, depth, alpha, beta, player) -> tuple[int, Gamestate]:
         return max_eval, best_move
     else:
         min_eval = 999999
-        arr = all_black_moves(board)
+        arr = generate_all_moves(board, board.player_is_white)
         best_move = None
         for e in arr:
             eval_score, _ = minimax(e, depth-1, alpha, beta, "White")
