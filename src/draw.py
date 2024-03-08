@@ -113,21 +113,28 @@ def main():
         else:
             new_states = all_black_moves(current_gs)
 
-        end_time = t.time()
-        elapsed_time = end_time - start_time
+        
         possible_game_states = new_states
 
         if versus_engine:
             if (player_is_white and current_gs.white_to_move_flag) or (not player_is_white and not current_gs.white_to_move_flag):
-                print(len(possible_game_states), 'possible move(s)')
-                print('Execution time:', elapsed_time, 'seconds')
+
                 current_gs = player_moves(current_gs, possible_game_states)
             else:
-                current_gs = r.choice(possible_game_states)
+                if player_is_white:
+                    current_gs = minimax(current_gs, 2, -999999, 999999, "white")[1]
+                else:
+                    current_gs = minimax(current_gs, 2, -999999, 999999, "black")[1]
         else:
             current_gs = player_moves(current_gs, possible_game_states)
 
         update_board(screen, clock, current_gs)
+
+        end_time = t.time()
+        elapsed_time = end_time - start_time
+
+        print(len(possible_game_states), 'possible move(s)')
+        print('Execution time:', elapsed_time, 'seconds')
 
         if is_checkmate(current_gs):
             print("GAME OVER, CHECKMATE")

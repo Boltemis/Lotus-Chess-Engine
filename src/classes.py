@@ -30,6 +30,8 @@ class Gamestate:
             if not isinstance(other, Gamestate):
                 return False
             return self.content == other.content
+        
+        self.amount_of_pieces = 32
     
         # should default to false
         self.ep_flag_array = [[False] * 8 for _ in range(2)]

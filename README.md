@@ -4,6 +4,7 @@
 * Description
 * How to Use
 * v1
+* V2
 
 ## Description
 This is a protoversion of my attempt at a chess AI.
@@ -37,3 +38,9 @@ The end goal for this project is to create a Chess Engine that has no problem be
         TODO: implement Minimax
         TODO: other parameters for evaluating a position (supported passed pawns, king safety, center control, bishop pair, ..)
         TODO: make move based on evaluation
+
+## v2 (8th of March 2024)
+    Worked on the evalation of a chess position by
+    * Implementing mimimax
+    * Adding positional value to a piece
+    The computer makes (not so optimal) moves based on its evaluation
