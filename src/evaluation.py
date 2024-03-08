@@ -1,10 +1,10 @@
-import sys
-from move import *
-from positional_value_db import *
+from move_generation import *
+from data.positional_values import *
+from classes.gamestate import *
 
 piece_points = {'p': 100, 'r': 500, 'b': 315, 'n': 300, 'q': 900, 'k': 5000}
 
-def minimax(board, depth, alpha, beta, player):
+def minimax(board, depth, alpha, beta, player) -> tuple[int, Gamestate]:
     if depth == 0:
         return evaluate(board)
     if player == 'White':
@@ -34,9 +34,9 @@ def minimax(board, depth, alpha, beta, player):
                 break
         return min_eval, best_move
     
-def evaluate(gs):
-    if is_checkmate(gs):
-        if gs.white_to_move_flag:
+def evaluate(gs) -> tuple[int, Gamestate]:
+    if gs.is_checkmate():
+        if gs.white_to_move:
             return 999999, gs
         else:
             return -999999, gs

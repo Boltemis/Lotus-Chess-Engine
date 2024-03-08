@@ -1,11 +1,9 @@
-from classes import *
-from move import *
+from classes.gamestate import *
+from move_generation import *
 import time as t
 import cProfile
 
-
-
-def testfunc():
+def testfunc() -> None:
     startgs = Gamestate()
 
     all_states = [startgs]

@@ -1,12 +1,14 @@
 import copy
 import pygame as p
 
+from classes.gamestate import Gamestate
+
 WIDTH = HEIGHT = 512
 DIMENSION = 8
 SQ_SIZE = HEIGHT // DIMENSION
 
-def player_moves(gs, possible_game_states):
-    if gs.white_to_move_flag:
+def player_moves(gs, possible_game_states) -> Gamestate: 
+    if gs.white_to_move:
         print("White to move")
     else:
         print("Black to move")
@@ -49,7 +51,7 @@ def player_moves(gs, possible_game_states):
     for ele in possible_game_states:
         possible_game_boards.append(ele.board)
     if new_gs.board in possible_game_boards:
-        new_gs.white_to_move_flag = not new_gs.white_to_move_flag
+        new_gs.white_to_move = not new_gs.white_to_move
         return new_gs
     else:
         return player_moves(gs, possible_game_states)

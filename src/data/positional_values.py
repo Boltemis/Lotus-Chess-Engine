@@ -1,4 +1,4 @@
-from classes import *
+from classes.gamestate import *
 
 positional_value_pawn_mg = [[  0,   0,   0,   0,   0,   0,   0,   0],
                             [ 98, 134,  61,  95,  68, 126,  34, -11],
