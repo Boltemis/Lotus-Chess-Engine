@@ -43,4 +43,4 @@ The end goal for this project is to create a Chess Engine that has no problem be
     Worked on the evalation of a chess position by
     * Implementing mimimax
     * Adding positional value to a piece
-    The computer makes (not so optimal) moves based on its evaluation
+    The computer makes (not so optimal) moves based on its evaluatio
