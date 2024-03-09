@@ -1,4 +1,3 @@
-import copy
 import pygame as p
 
 from classes.gamestate import Gamestate
@@ -40,7 +39,6 @@ def player_moves(gs, possible_game_states) -> Gamestate:
     for ele in possible_game_states:
         possible_game_boards.append(ele.board) 
 
-    
     if new_gs.board in possible_game_boards:
         return new_gs
     else:

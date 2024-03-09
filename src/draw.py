@@ -1,7 +1,6 @@
 from evaluation import *
 from classes.gamestate import *
 from classes.button import *
-from move_generation import *
 from playermode import *
 import pygame as p
 
