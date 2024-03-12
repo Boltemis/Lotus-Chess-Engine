@@ -9,7 +9,7 @@ def minimax(gs: Gamestate, depth, alpha, beta, player) -> tuple[int, Gamestate]:
     
     if player == 'White':
         max_eval = -999999
-        arr = gs.generate_all_moves(False)
+        arr = gs.generate_all_moves(True)
         best_move = None
         for e in arr:
             eval_score, _ = minimax(e, depth-1, alpha, beta, "Black")
@@ -22,7 +22,7 @@ def minimax(gs: Gamestate, depth, alpha, beta, player) -> tuple[int, Gamestate]:
         return max_eval, best_move
     else:
         min_eval = 999999
-        arr = gs.generate_all_moves(True)
+        arr = gs.generate_all_moves(False)
         best_move = None
         for e in arr:
             eval_score, _ = minimax(e, depth-1, alpha, beta, "White")
@@ -36,7 +36,7 @@ def minimax(gs: Gamestate, depth, alpha, beta, player) -> tuple[int, Gamestate]:
     
 def evaluate(gs: Gamestate) -> tuple[int, Gamestate]:
     if gs.is_checkmate():
-        if gs.white_to_move:
+        if gs.is_white_to_move:
             return 999999, gs
         else:
             return -999999, gs

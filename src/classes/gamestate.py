@@ -34,7 +34,8 @@ class Gamestate:
                                             }
 
     def copy(self, board: List[List[str]]) -> 'Gamestate':
-        copy = Gamestate(board, self.flags)
+        flags_copy = {key: value for key, value in self.flags.items()}
+        copy = Gamestate(board, flags_copy)
         return copy
 
     def change_player(self) -> None:
@@ -58,14 +59,14 @@ class Gamestate:
                     if self.board[i][j] == 'k':
                         return self.is_square_under_attack(i, j)
 
-    def is_checkmate(self) -> bool:
+    def is_checkmate(self) -> bool: # should use this generate_all_moves call for the next iteration
         return self.is_check() and not self.generate_all_moves(self.is_white_to_move())
 
     def is_stalemate(self) -> bool:
-        return self.is_stalemate_by_no_moves or self.is_stalemate_by_fifty_move_rule or self.is_stalemate_by_insufficient_material or self.is_stalemate_by_threefold_repetition
+        return self.is_stalemate_by_no_moves() or self.is_stalemate_by_fifty_move_rule() or self.is_stalemate_by_insufficient_material() or self.is_stalemate_by_threefold_repetition()
     
-    def is_stalemate_by_no_moves(self) -> bool:
-        return not self.is_check and not self.generate_all_moves(self.is_white_to_move())
+    def is_stalemate_by_no_moves(self) -> bool: # should use this generate_all_moves call for the next iteration
+        return not self.is_check() and not self.generate_all_moves(self.is_white_to_move())
 
     def is_stalemate_by_insufficient_material(self) -> bool:
         return False
@@ -141,6 +142,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row-1 > 0 and col-1 > 0 and self.board[row-1][col-1].islower():
                 new_move = [ele[:] for ele in self.board]
@@ -149,6 +151,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row-1 > 0 and col+1 < 8 and self.board[row-1][col+1].islower():
                 new_move = [ele[:] for ele in self.board]
@@ -157,6 +160,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row == 6 and self.board[row-2][col] == "-":
                 new_move = [ele[:] for ele in self.board]
@@ -165,6 +169,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
         else:
             if row+1 < 8 and self.board[row+1][col] == "-":
@@ -174,6 +179,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row+1 < 8 and col-1 > 0 and self.board[row+1][col-1].isupper():
                 new_move = [ele[:] for ele in self.board]
@@ -182,6 +188,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row+1 < 8 and col+1 < 8 and self.board[row+1][col+1].isupper():
                 new_move = [ele[:] for ele in self.board]
@@ -190,6 +197,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row == 1 and self.board[row+2][col] == "-":
                 new_move = [ele[:] for ele in self.board]
@@ -198,6 +206,7 @@ class Gamestate:
                 new_gamestate = self.copy(new_move)
                 
                 if not new_gamestate.is_check():
+                    new_gamestate.change_player()
                     moves.append(new_gamestate)
 
         return moves
@@ -217,6 +226,7 @@ class Gamestate:
                         new_gamestate = self.copy(new_move)
                         
                         if not new_gamestate.is_check():
+                            new_gamestate.change_player()
                             moves.append(new_gamestate)
                     if self.board[new_row][new_col] != "-":
                         break
@@ -240,6 +250,7 @@ class Gamestate:
                         new_gamestate = self.copy(new_move)
                         
                         if not new_gamestate.is_check():
+                            new_gamestate.change_player()
                             moves.append(new_gamestate)
                     if self.board[new_row][new_col] != "-":
                         break
@@ -266,7 +277,8 @@ class Gamestate:
                     new_gamestate = self.copy(new_move)
                     
                     if not new_gamestate.is_check():
-                            moves.append(new_gamestate)
+                        new_gamestate.change_player()
+                        moves.append(new_gamestate)
 
         return moves
             
@@ -284,7 +296,8 @@ class Gamestate:
                     new_gamestate = self.copy(new_move)
                     
                     if not new_gamestate.is_check():
-                            moves.append(new_gamestate)
+                        new_gamestate.change_player()
+                        moves.append(new_gamestate)
 
         return moves
 
@@ -327,5 +340,4 @@ class Gamestate:
                         case _:
                             pass
         
-        print(len(moves))
         return moves

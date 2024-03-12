@@ -35,6 +35,7 @@ def player_moves(gs, possible_game_states) -> Gamestate:
     new_move[end_row][end_col] = piece
 
     new_gs = gs.copy(new_move)
+    new_gs.change_player()
     possible_game_boards = []
     for ele in possible_game_states:
         possible_game_boards.append(ele.board) 

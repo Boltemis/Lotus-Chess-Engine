@@ -1,4 +1,3 @@
-import random
 from draw import *
 import time as t
 
@@ -43,9 +42,9 @@ def main():
                 current_gs = player_moves(current_gs, possible_game_states)
             else:
                 if player_is_white:
-                    current_gs = minimax(current_gs, 2, -999999, 999999, "white")[1]
+                    current_gs = minimax(current_gs, 4, -999999, 999999, "white")[1]
                 else:
-                    current_gs = minimax(current_gs, 2, -999999, 999999, "black")[1]
+                    current_gs = minimax(current_gs, 4, -999999, 999999, "black")[1]
         else:
             current_gs = player_moves(current_gs, possible_game_states)
 
@@ -56,10 +55,10 @@ def main():
 
         if current_gs.is_checkmate():
             print("GAME OVER, CHECKMATE")
-            running = False
+            #running = False
         elif current_gs.is_stalemate():
             print("GAME OVER, STALEMATE")
-            running = False
+            #running = False
 
 if __name__ == "__main__":
     main()
