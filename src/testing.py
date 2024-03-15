@@ -1,5 +1,5 @@
 import copy
-from src.classes.gamestate import *
+from classes.gamestate import *
 import time as t
 
 def test_move_generation():   

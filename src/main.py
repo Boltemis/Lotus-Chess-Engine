@@ -33,9 +33,6 @@ def main():
    
         start_time = t.time()       
         possible_game_states = current_gs.generate_all_moves(current_gs.is_white_to_move())
-        
-        end_time = t.time()
-        elapsed_time = end_time - start_time
 
         if versus_engine:
             if (player_is_white and current_gs.is_white_to_move()) or (not player_is_white and not current_gs.is_white_to_move()):
@@ -48,6 +45,9 @@ def main():
         else:
             current_gs = player_moves(current_gs, possible_game_states)
 
+        end_time = t.time()
+        elapsed_time = end_time - start_time
+        
         update_board(screen, clock, current_gs)
 
         print(len(possible_game_states), 'possible move(s)')

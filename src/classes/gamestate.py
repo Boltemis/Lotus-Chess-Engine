@@ -1,5 +1,4 @@
 from typing import List
-from utils import *
 
 class Gamestate:
     def __init__(self, board=None, flags=None):
@@ -84,16 +83,38 @@ class Gamestate:
         def is_empty_or_opponent_piece(row, col):
             return self.board[row][col] == '-' or (piece.isupper() != self.board[row][col].isupper())
 
+        def is_path_clear(start_row, start_col, end_row, end_col):
+            if start_row == end_row:  # Horizontal movement
+                direction = 1 if end_col > start_col else -1
+                for col in range(start_col + direction, end_col, direction):
+                    if self.board[start_row][col] != '-':
+                        return False
+            elif start_col == end_col:  # Vertical movement
+                direction = 1 if end_row > start_row else -1
+                for row in range(start_row + direction, end_row, direction):
+                    if self.board[row][start_col] != '-':
+                        return False
+            else:  # Diagonal movement
+                row_direction = 1 if end_row > start_row else -1
+                col_direction = 1 if end_col > start_col else -1
+                row, col = start_row + row_direction, start_col + col_direction
+                while row != end_row and col != end_col:
+                    if self.board[row][col] != '-':
+                        return False
+                    row += row_direction
+                    col += col_direction
+            return True
+
         if piece.lower() == 'p':
             if start_col == end_col:
                 if piece.isupper():
                     if start_row == 6:
-                        return end_row == start_row - 1 or (end_row == start_row - 2 and self.board[end_row + 1][end_col] == '-')
+                        return end_row == start_row - 1 or (end_row == start_row - 2 and self.board[end_row + 1][end_col] == '-' and is_path_clear(start_row, start_col, end_row, end_col))
                     else:
                         return end_row == start_row - 1
                 else:
                     if start_row == 1:
-                        return end_row == start_row + 1 or (end_row == start_row + 2 and self.board[end_row - 1][end_col] == '-')
+                        return end_row == start_row + 1 or (end_row == start_row + 2 and self.board[end_row - 1][end_col] == '-' and is_path_clear(start_row, start_col, end_row, end_col))
                     else:
                         return end_row == start_row + 1
             elif abs(end_col - start_col) == 1 and destination_piece != '-':
@@ -103,11 +124,11 @@ class Gamestate:
         elif piece.lower() == 'n':
             return (abs(end_row - start_row) == 2 and abs(end_col - start_col) == 1) or (abs(end_row - start_row) == 1 and abs(end_col - start_col) == 2)
         elif piece.lower() == 'b':
-            return abs(end_row - start_row) == abs(end_col - start_col) and all(is_empty_or_opponent_piece(r, c) for r, c in zip(range(start_row, end_row, 1 if end_row > start_row else -1), range(start_col, end_col, 1 if end_col > start_col else -1)))
+            return abs(end_row - start_row) == abs(end_col - start_col) and is_path_clear(start_row, start_col, end_row, end_col) and all(is_empty_or_opponent_piece(r, c) for r, c in zip(range(start_row, end_row, 1 if end_row > start_row else -1), range(start_col, end_col, 1 if end_col > start_col else -1)))
         elif piece.lower() == 'r':
-            return (start_row == end_row or start_col == end_col) and all(is_empty_or_opponent_piece(r, c) for r, c in ((r, start_col) if start_row == end_row else (start_row, c) for r, c in zip(range(min(start_row, end_row), max(start_row, end_row)), range(min(start_col, end_col), max(start_col, end_col)))))
+            return (start_row == end_row or start_col == end_col) and is_path_clear(start_row, start_col, end_row, end_col) and all(is_empty_or_opponent_piece(r, c) for r, c in ((r, start_col) if start_row == end_row else (start_row, c) for r, c in zip(range(min(start_row, end_row), max(start_row, end_row)), range(min(start_col, end_col), max(start_col, end_col)))))
         elif piece.lower() == 'q':
-            return (start_row == end_row or start_col == end_col or abs(end_row - start_row) == abs(end_col - start_col)) and all(is_empty_or_opponent_piece(r, c) for r, c in ((r, start_col) if start_row == end_row else (start_row, c) if start_col == end_col else (r, c) for r, c in zip(range(min(start_row, end_row), max(start_row, end_row)), range(min(start_col, end_col), max(start_col, end_col)))))
+            return (start_row == end_row or start_col == end_col or abs(end_row - start_row) == abs(end_col - start_col)) and is_path_clear(start_row, start_col, end_row, end_col) and all(is_empty_or_opponent_piece(r, c) for r, c in ((r, start_col) if start_row == end_row else (start_row, c) if start_col == end_col else (r, c) for r, c in zip(range(min(start_row, end_row), max(start_row, end_row)), range(min(start_col, end_col), max(start_col, end_col)))))
         elif piece.lower() == 'k':
             return abs(end_row - start_row) <= 1 and abs(end_col - start_col) <= 1
         else:
@@ -135,7 +156,7 @@ class Gamestate:
     def generate_pawn_moves(self, row: int, col: int) -> List['Gamestate']:
         moves = []
         if self.board[row][col] == "P":
-            if row-1 > 0 and self.board[row-1][col] == "-":
+            if row-1 >= 0 and self.board[row-1][col] == "-":
                 new_move = [ele[:] for ele in self.board]
                 new_move[row-1][col] = "P"
                 new_move[row][col] = "-"
@@ -144,7 +165,7 @@ class Gamestate:
                 if not new_gamestate.is_check():
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
-            if row-1 > 0 and col-1 > 0 and self.board[row-1][col-1].islower():
+            if row-1 >= 0 and col-1 >= 0 and self.board[row-1][col-1].islower():
                 new_move = [ele[:] for ele in self.board]
                 new_move[row-1][col-1] = "P"
                 new_move[row][col] = "-"
@@ -153,7 +174,7 @@ class Gamestate:
                 if not new_gamestate.is_check():
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
-            if row-1 > 0 and col+1 < 8 and self.board[row-1][col+1].islower():
+            if row-1 >= 0 and col+1 < 8 and self.board[row-1][col+1].islower():
                 new_move = [ele[:] for ele in self.board]
                 new_move[row-1][col+1] = "P"
                 new_move[row][col] = "-"
@@ -181,7 +202,7 @@ class Gamestate:
                 if not new_gamestate.is_check():
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
-            if row+1 < 8 and col-1 > 0 and self.board[row+1][col-1].isupper():
+            if row+1 < 8 and col-1 >= 0 and self.board[row+1][col-1].isupper():
                 new_move = [ele[:] for ele in self.board]
                 new_move[row+1][col-1] = "p"
                 new_move[row][col] = "-"
