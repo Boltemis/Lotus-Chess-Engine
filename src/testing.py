@@ -12,7 +12,13 @@ def test_move_generation():
 
         end_time = t.time()
         elapsed_time = end_time - start_time
+        ctr = 0
+        for gs in possible_game_states:
+            if gs.is_checkmate():
+                ctr += 1
+
         print(len(possible_game_states), 'possible move(s)')
+        print('Amount of checkmates found:', ctr)
         print('Execution time:', elapsed_time, 'seconds')
 
         gamestates = copy.deepcopy(possible_game_states)

@@ -162,7 +162,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row-1, col):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row-1 >= 0 and col-1 >= 0 and self.board[row-1][col-1].islower():
@@ -171,7 +171,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row-1, col-1):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row-1 >= 0 and col+1 < 8 and self.board[row-1][col+1].islower():
@@ -180,7 +180,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row-1, col+1):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row == 6 and self.board[row-2][col] == "-":
@@ -189,7 +189,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row-2, col):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
         else:
@@ -199,7 +199,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row+1, col):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row+1 < 8 and col-1 >= 0 and self.board[row+1][col-1].isupper():
@@ -208,7 +208,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row+1, col-1):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row+1 < 8 and col+1 < 8 and self.board[row+1][col+1].isupper():
@@ -217,7 +217,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row+1, col+1):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
             if row == 1 and self.board[row+2][col] == "-":
@@ -226,7 +226,7 @@ class Gamestate:
                 new_move[row][col] = "-"
                 new_gamestate = self.copy(new_move)
                 
-                if not new_gamestate.is_check():
+                if not new_gamestate.is_check() and self.is_valid_move(row, col, row+2, col):
                     new_gamestate.change_player()
                     moves.append(new_gamestate)
 
@@ -301,6 +301,55 @@ class Gamestate:
                         new_gamestate.change_player()
                         moves.append(new_gamestate)
 
+        if self.board[row][col].isupper():
+            if not self.flags["white_king_moved"]:
+                if not self.flags["left_white_rook_moved"] and self.board[row][col-1] == '-' and self.board[row][col-2] == '-' and self.board[row][col-3] == '-':
+                    new_move = [row[:] for row in self.board]
+                    new_move[row][col] = "-"
+                    new_move[row][col-2] = 'K'
+                    new_move[row][col-1] = "R"
+                    new_move[row][col-4] = "-"
+                    new_gamestate = self.copy(new_move)
+                    
+                    if not new_gamestate.is_check():
+                        new_gamestate.change_player()
+                        moves.append(new_gamestate)
+
+                if not self.flags["right_white_rook_moved"] and self.board[row][col+1] == '-' and self.board[row][col+2] == '-':
+                    new_move = [row[:] for row in self.board]
+                    new_move[row][col] = "-"
+                    new_move[row][col+2] = 'K'
+                    new_move[row][col+1] = "R"
+                    new_move[row][col+3] = "-"
+                    new_gamestate = self.copy(new_move)
+                    
+                    if not new_gamestate.is_check():
+                        new_gamestate.change_player()
+                        moves.append(new_gamestate)
+        else:
+            if not self.flags["black_king_moved"]:
+                if not self.flags["left_black_rook_moved"] and self.board[row][col-1] == '-' and self.board[row][col-2] == '-' and self.board[row][col-3] == '-':
+                    new_move = [row[:] for row in self.board]
+                    new_move[row][col] = "-"
+                    new_move[row][col-2] = 'k'
+                    new_move[row][col-1] = "r"
+                    new_move[row][col-4] = "-"
+                    new_gamestate = self.copy(new_move)
+                    
+                    if not new_gamestate.is_check():
+                        new_gamestate.change_player()
+                        moves.append(new_gamestate)
+                if not self.flags["right_black_rook_moved"] and self.board[row][col+1] == '-' and self.board[row][col+2] == '-':
+                    new_move = [row[:] for row in self.board]
+                    new_move[row][col] = "-"
+                    new_move[row][col+2] = 'k'
+                    new_move[row][col+1] = "r"
+                    new_move[row][col+3] = "-"
+                    new_gamestate = self.copy(new_move)
+                    
+                    if not new_gamestate.is_check():
+                        new_gamestate.change_player()
+                        moves.append(new_gamestate)
         return moves
             
     def generate_knight_moves(self, row: int, col: int) -> List['Gamestate']:
