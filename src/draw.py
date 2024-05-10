@@ -1,7 +1,4 @@
-from evaluation import *
-from classes.gamestate import *
 from classes.button import *
-from playermode import *
 import pygame as p
 
 WIDTH = HEIGHT = 512
@@ -18,9 +15,9 @@ def load_images() -> None:
             piece = 'w' + piece
         IMAGES[piece] = p.image.load("./img/" + piece + ".png")
 
-def draw_gamestate(screen, gs) -> None:
+def draw_gamestate(screen, board) -> None:
     draw_board(screen)
-    draw_pieces(screen, gs)
+    draw_pieces(screen, board.matrix)
 
 def draw_board(screen) -> None:
     colors = [p.Color("white"), p.Color("gray")]

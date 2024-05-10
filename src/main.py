@@ -1,5 +1,28 @@
 from draw import *
+from playermode import *
+from evaluation import *
 import time as t
+
+START_FLAGS: dict[str: bool] = {
+    "white_king_moved": False, 
+    "left_white_rook_moved": False, 
+    "right_white_rook_moved": False, 
+    "black_king_moved": False,
+    "left_black_rook_moved": False, 
+    "right_black_rook_moved": False, 
+    "white_to_move": True
+    }
+
+START_BOARD: List[str] = [
+    ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'], 
+    ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'], 
+    ['-', '-', '-', '-', '-', '-', '-', '-'], 
+    ['-', '-', '-', '-', '-', '-', '-', '-'], 
+    ['-', '-', '-', '-', '-', '-', '-', '-'], 
+    ['-', '-', '-', '-', '-', '-', '-', '-'], 
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'], 
+    ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+]
 
 screen = p.display.set_mode((800, 600))
 
@@ -20,8 +43,7 @@ def main():
 
     # set up game
     load_images()
-    current_gs = Gamestate()
-    possible_game_states = [current_gs]
+    current_gs = Gamestate(Board(START_BOARD), START_FLAGS, 0, 32, 0)
     update_board(screen, clock, current_gs)
 
     # game loop
@@ -32,33 +54,31 @@ def main():
                 running = False
    
         start_time = t.time()       
-        possible_game_states = current_gs.generate_all_moves(current_gs.is_white_to_move())
+        current_gs.generate_all_moves()
 
         if versus_engine:
-            if (player_is_white and current_gs.is_white_to_move()) or (not player_is_white and not current_gs.is_white_to_move()):
-                current_gs = player_moves(current_gs, possible_game_states)
+            if (player_is_white == current_gs.is_white_to_move()):
+                current_gs = player_moves(current_gs, current_gs.possible_moves)
             else:
-                if player_is_white:
-                    current_gs = minimax(current_gs, 4, -999999, 999999, "white")[1]
-                else:
-                    current_gs = minimax(current_gs, 4, -999999, 999999, "black")[1]
+                current_gs = minimax(current_gs, 3, -999999, 999999, current_gs.is_white_to_move())[1]
+
         else:
-            current_gs = player_moves(current_gs, possible_game_states)
+            current_gs = player_moves(current_gs, current_gs.possible_moves)
 
         end_time = t.time()
         elapsed_time = end_time - start_time
         
         update_board(screen, clock, current_gs)
 
-        print(len(possible_game_states), 'possible move(s)')
+        print(len(current_gs.possible_moves), 'possible move(s)')
         print('Execution time:', elapsed_time, 'seconds')
 
         if current_gs.is_checkmate():
             print("GAME OVER, CHECKMATE")
-            #running = False
+            running = False
         elif current_gs.is_stalemate():
             print("GAME OVER, STALEMATE")
-            #running = False
+            running = False
 
 if __name__ == "__main__":
     main()
