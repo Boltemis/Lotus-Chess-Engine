@@ -30,18 +30,19 @@ def test_move_generation():
         for gs in gamestates:
             if len(gs.possible_moves) == 0:
                 gs.generate_all_moves()
-        
         end_time = t.time()
         elapsed_time = end_time - start_time
-        ctr = 0
-        gamestates = []
-        for move in gs.possible_moves:
-            gamestates.append(gs.apply_move(move))
-            if gs.is_checkmate(move):
-                ctr += 1
+        checkmate_counter = 0
+        new_gamestates = []
+        for gs in gamestates:
+            for move in gs.possible_moves:
+                new_gamestates.append(gs.apply_move(move))
+                if gs.is_checkmate(move):
+                    checkmate_counter += 1
 
-        print(len(gamestates), 'possible move(s)')
-        print('Amount of checkmates found:', ctr)
+        print(len(new_gamestates), 'possible move(s)')
+        print('Amount of checkmates found:', checkmate_counter)
         print('Execution time:', elapsed_time, 'seconds')
+        gamestates = new_gamestates
 
 test_move_generation()

@@ -15,9 +15,9 @@ def load_images() -> None:
             piece = 'w' + piece
         IMAGES[piece] = p.image.load("./img/" + piece + ".png")
 
-def draw_gamestate(screen, board) -> None:
+def draw_gamestate(screen, board: List[int]) -> None:
     draw_board(screen)
-    draw_pieces(screen, board.matrix)
+    draw_pieces(screen, board)
 
 def draw_board(screen) -> None:
     colors = [p.Color("white"), p.Color("gray")]
@@ -36,8 +36,8 @@ def draw_pieces(screen, board) -> None:
                     piece = 'w' + piece
                 screen.blit(IMAGES[piece], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
-def update_board(screen, clock, gs) -> None:
-    draw_gamestate(screen, gs.board)
+def update_board(screen, clock, matrix) -> None:
+    draw_gamestate(screen, matrix)
     clock.tick(MAX_FPS)
     p.display.flip()
  

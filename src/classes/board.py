@@ -26,3 +26,6 @@ class Board:
                 row += row_direction
                 col += col_direction
         return True
+
+    def matrix_copy(self):
+        return [r[:] for r in self.matrix]

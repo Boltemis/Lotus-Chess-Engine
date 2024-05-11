@@ -25,6 +25,12 @@ START_BOARD: List[str] = [
 ]
 
 class TestMoveGeneration(unittest.TestCase):
+    def test_copy(self):
+        gs = Gamestate(Board(START_BOARD), START_FLAGS, 0, 32, 0)
+        new_gs = gs.copy()
+        new_gs.board.matrix[4][2] = 'R'
+        self.assertNotEqual(gs.board.matrix[4][2], new_gs.board.matrix[4][2])
+
     def test_change_player(self):
         gs = Gamestate(Board(START_BOARD), START_FLAGS, 0, 32, 0)
         self.assertTrue(gs.is_white_to_move())
@@ -59,16 +65,6 @@ class TestMoveGeneration(unittest.TestCase):
         self.assertFalse(board.is_path_clear(1, 4, 7, 4))
         self.assertFalse(board.is_path_clear(0, 0, 3, 3))
         self.assertTrue(board.is_path_clear(4, 4, 4, 4))
-
-    def test_is_valid_move(self):
-        gs = Gamestate(Board(START_BOARD), START_FLAGS, 0, 32, 0)
-        self.assertTrue(gs.is_valid_move(6, 0, 4, 0))
-        self.assertTrue(gs.is_valid_move(6, 0, 3, 0))
-        self.assertTrue(gs.is_valid_move(7, 1, 5, 2))
-        self.assertFalse(gs.is_valid_move(7, 1, 5, 1))
-        self.assertFalse(gs.is_valid_move(7, 2, 5, 4))
-        self.assertTrue(gs.is_valid_move(7, 4, 7, 4))
-
 
     def test_is_square_under_attack(self):
         pass

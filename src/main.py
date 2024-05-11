@@ -44,7 +44,7 @@ def main():
     # set up game
     load_images()
     current_gs = Gamestate(Board(START_BOARD), START_FLAGS, 0, 32, 0)
-    update_board(screen, clock, current_gs)
+    update_board(screen, clock, current_gs.board.matrix)
 
     # game loop
     running = True
@@ -55,12 +55,15 @@ def main():
    
         start_time = t.time()       
         current_gs.generate_all_moves()
-
+        if current_gs.is_white_to_move():
+            print("White to move")
+        else:
+            print("Black to move")
         if versus_engine:
             if (player_is_white == current_gs.is_white_to_move()):
                 current_gs = player_moves(current_gs, current_gs.possible_moves)
             else:
-                current_gs = minimax(current_gs, 3, -999999, 999999, current_gs.is_white_to_move())[1]
+                current_gs = minimax(current_gs, 4, -999999, 999999, current_gs.is_white_to_move())[1]
 
         else:
             current_gs = player_moves(current_gs, current_gs.possible_moves)
@@ -68,17 +71,10 @@ def main():
         end_time = t.time()
         elapsed_time = end_time - start_time
         
-        update_board(screen, clock, current_gs)
+        update_board(screen, clock, current_gs.board.matrix)
 
         print(len(current_gs.possible_moves), 'possible move(s)')
         print('Execution time:', elapsed_time, 'seconds')
-
-        if current_gs.is_checkmate():
-            print("GAME OVER, CHECKMATE")
-            running = False
-        elif current_gs.is_stalemate():
-            print("GAME OVER, STALEMATE")
-            running = False
 
 if __name__ == "__main__":
     main()
