@@ -12,7 +12,7 @@ This is also my first big soloproject.
 The end goal for this project is to create a Chess Engine that has no problem beating me (1750 rapid on chess.com)
 
 ## How to Use
-    1. run the draw.py file
+    1. run the main.py file
     2. select 'PLAY A FRIEND' or 'PLAY THE LOTUS CHESS ENGINE'
     3. if the latter has been chosen, select 'PLAY AS WHITE' or 'PLAY AS BLACK'
     4. click on the piece you want to move.

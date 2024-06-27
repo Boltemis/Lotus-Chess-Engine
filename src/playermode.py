@@ -1,16 +1,13 @@
-import copy
+from classes.gamestate import Gamestate
+from classes.move import Move
+
 import pygame as p
 
 WIDTH = HEIGHT = 512
 DIMENSION = 8
 SQ_SIZE = HEIGHT // DIMENSION
 
-def player_moves(gs, possible_game_states):
-    if gs.white_to_move_flag:
-        print("White to move")
-    else:
-        print("Black to move")
-
+def player_moves(gs, possible_moves, player_is_white) -> Gamestate: 
     wait = p.event.wait()
     while wait.type != p.MOUSEBUTTONDOWN:
         wait = p.event.wait()
@@ -18,7 +15,6 @@ def player_moves(gs, possible_game_states):
     pos = p.mouse.get_pos()
     col = pos[0] // SQ_SIZE
     row = pos[1] // SQ_SIZE
-    piece = gs.board[row][col]
     
     wait = p.event.wait()
     while wait.type != p.MOUSEBUTTONDOWN:
@@ -28,29 +24,13 @@ def player_moves(gs, possible_game_states):
     end_col = pos[0] // SQ_SIZE
     end_row = pos[1] // SQ_SIZE
 
-    new_gs = copy.deepcopy(gs)
-
-    if (piece == 'K' and end_col == col + 2 and end_row == row) or (piece == 'k' and end_col == col + 2 and end_row == row):
-        new_gs.board[row][col] = '-'
-        new_gs.board[end_row][end_col] = piece
-        new_gs.board[row][col+3] = '-'
-        new_gs.board[end_row][end_col-1] = 'R'
-
+    if player_is_white:
+        new_move = gs.apply_move(Move(row, col, end_row, end_col))
     else:
-        new_gs.board[row][col] = '-'
-        new_gs.board[end_row][end_col] = piece
-
-        if (piece == 'P' and end_row == row - 2):
-            new_gs.ep_flag_array[0][col] = True
-        elif (piece == 'p' and end_row == row + 2):
-            new_gs.ep_flag_array[1][col] = True
-
-    possible_game_boards = []
-    for ele in possible_game_states:
-        possible_game_boards.append(ele.board)
-    if new_gs.board in possible_game_boards:
-        new_gs.white_to_move_flag = not new_gs.white_to_move_flag
-        return new_gs
-    else:
-        return player_moves(gs, possible_game_states)
+        new_move = gs.apply_move(Move(7-row, 7-col, 7-end_row, 7-end_col))
+    for move in possible_moves:
+        if new_move == move:
+            return new_move
+    print("Invalid move..")
+    return player_moves(gs, possible_moves, player_is_white)
     
