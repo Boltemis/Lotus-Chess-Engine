@@ -26,23 +26,22 @@ START_BOARD: List[str] = [
 def test_move_generation():   
     gamestates = [Gamestate(Board(START_BOARD), START_FLAGS, 0, 32, 0)]
     while True:
+        print("\nNext Iteration: ")
+        checkmate_counter = 0
+        new_gamestates = []
         start_time = t.time()
         for gs in gamestates:
             if len(gs.possible_moves) == 0:
-                gs.generate_all_moves()
+                new_gamestates.extend(gs.generate_all_moves())
+            if gs.is_checkmate():
+                checkmate_counter += 1
         end_time = t.time()
         elapsed_time = end_time - start_time
-        checkmate_counter = 0
-        new_gamestates = []
-        for gs in gamestates:
-            for move in gs.possible_moves:
-                new_gamestates.append(gs.apply_move(move))
-                if gs.is_checkmate(move):
-                    checkmate_counter += 1
 
+        print('Execution time generating moves:', elapsed_time, 'seconds')
         print(len(new_gamestates), 'possible move(s)')
         print('Amount of checkmates found:', checkmate_counter)
-        print('Execution time:', elapsed_time, 'seconds')
+        
         gamestates = new_gamestates
 
 test_move_generation()

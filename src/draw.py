@@ -15,9 +15,9 @@ def load_images() -> None:
             piece = 'w' + piece
         IMAGES[piece] = p.image.load("./img/" + piece + ".png")
 
-def draw_gamestate(screen, board: List[int]) -> None:
+def draw_gamestate(screen, board: List[int], player_is_white) -> None:
     draw_board(screen)
-    draw_pieces(screen, board)
+    draw_pieces(screen, board, player_is_white)
 
 def draw_board(screen) -> None:
     colors = [p.Color("white"), p.Color("gray")]
@@ -26,7 +26,7 @@ def draw_board(screen) -> None:
             color = colors[((r+c) % 2)]
             p.draw.rect(screen, color, p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
-def draw_pieces(screen, board) -> None:
+def draw_pieces(screen, board, player_is_white) -> None:
     for r in range(DIMENSION):
         for c in range(DIMENSION):
             piece = board[r][c]
@@ -34,10 +34,13 @@ def draw_pieces(screen, board) -> None:
             if piece != "-":
                 if piece.isupper():
                     piece = 'w' + piece
-                screen.blit(IMAGES[piece], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+                if player_is_white:
+                    screen.blit(IMAGES[piece], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+                else:
+                    screen.blit(IMAGES[piece], p.Rect((7-c)*SQ_SIZE, (7-r)*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
-def update_board(screen, clock, matrix) -> None:
-    draw_gamestate(screen, matrix)
+def update_board(screen, clock, matrix, player_is_white) -> None:
+    draw_gamestate(screen, matrix, player_is_white)
     clock.tick(MAX_FPS)
     p.display.flip()
  
@@ -53,7 +56,7 @@ def run_menu() -> None:
             if event.type == p.MOUSEBUTTONUP:
                 if event.button == 1: 
                     if button1.rect.collidepoint(event.pos):
-                        return False, False
+                        return False, True
                     elif button2.rect.collidepoint(event.pos):
                         while True:
                             for event in p.event.get():

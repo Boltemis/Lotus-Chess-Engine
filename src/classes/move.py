@@ -4,9 +4,6 @@ class Move:
         self.start_col = start_col
         self.end_row = end_row
         self.end_col = end_col
-        self.is_check = None
-        self.is_checkmate = None
-        self.is_stalemate = None
     
     def print_move(self):
         print(self.start_col, self.start_row, self.end_col, self.end_row)
